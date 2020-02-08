@@ -12,14 +12,12 @@ class Node {
     get children    ()     { return attachedChildren.get(this) }
 }
  
-let input = ["apple", "banana", "ace", "app", "ball", "bet"]
-
 const makeNode = (data) => {
   let node = new Node(uuid())
   node.data(data)
 }
 
-const traverseBF = (callback) = (root) = (wordComponents) => {
+const traverseBF = (root) = (wordComponents) => {
   let queue = [root]
   let word  = [wordComponents]
   const sameLevelNodes = root => {
@@ -67,7 +65,7 @@ const makeComponents = components => {
         acc.children = node
         acc = acc.children
       }, makeNode(word.head)) 
-      traverseBF(mergeNode)(...root)(wordComponents)    
+      traverseBF(...root)(wordComponents)    
   })
 }
 
@@ -93,10 +91,8 @@ const makeRoots = (trees) => (input) => {
   )
 }  
   
-const makeTree = tree => newTree => [...tree, newTree]
-
 
 const insert = tree => input =>
-  compose(makeTree, makeBranches, makeRoots)
+  compose(makeBranches, makeRoots)
 
-
+input = ["apple", "banana", "ace", "app", "ball", "bet"]

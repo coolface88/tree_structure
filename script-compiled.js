@@ -59,14 +59,12 @@ function () {
   return Node;
 }();
 
-var input = ["apple", "banana", "ace", "app", "ball", "bet"];
-
 var makeNode = function makeNode(data) {
   var node = new Node((0, _uuid.v4)());
   node.data(data);
 };
 
-var traverseBF = callback = root = function (_root) {
+var traverseBF = root = function (_root) {
   function root(_x) {
     return _root.apply(this, arguments);
   }
@@ -76,18 +74,46 @@ var traverseBF = callback = root = function (_root) {
   };
 
   return root;
-}(function (value) {
+}(function (wordComponents) {
   var queue = [root];
+  var word = [wordComponents];
+
+  var sameLevelNodes = function sameLevelNodes(root) {
+    var arr = [[root]];
+
+    if (root.children) {
+      for (var i = 0; i < root.children.length; i++) {
+        var child = root.children[i];
+        [].concat(arr, [[].push(child)]);
+      }
+
+      for (var i = 0; i < root.children.length; i++) {
+        var child = root.children[i];
+        sameLevelNodes(child);
+      }
+    }
+  };
 
   while (queue.length) {
     var node = queue.shift();
+    var letter = word.shift();
+    var newPrefix = true;
 
-    if (node.data === value) {
-      callback(value);
-    } else {
-      callback(value);
-      queue.push.apply(queue, _toConsumableArray(node.children));
+    if (!letter.children) {
+      return root;
     }
+
+    if (node.data !== letter.data) {
+      _toConsumableArray(node.children.push(letter));
+
+      return node;
+    }
+
+    if (newPrefix === true) {}
+
+    if (node.data === letter.data && node.children) {
+      queue.push.apply(queue, _toConsumableArray(node.children));
+    } else if (node.data === letter && position === level && node.children) {}
   }
 });
 
@@ -97,9 +123,12 @@ var makeComponents = function makeComponents(components) {
       words = _components[1];
 
   words.forEach(function (word) {
-    _toConsumableArray(word).forEach(function (letter) {
-      traverseBF(makeNode)(root)(letter);
-    });
+    wordComponents = _toConsumableArray(word).reduce(function (acc, curr) {
+      var node = makeNode(curr);
+      acc.children = node;
+      acc = acc.children;
+    }, makeNode(word.head));
+    traverseBF.apply(void 0, _toConsumableArray(root))(wordComponents);
   });
 };
 
@@ -142,14 +171,10 @@ var makeRoots = function makeRoots(trees) {
   };
 };
 
-var makeTree = function makeTree(tree) {
-  return function (newTree) {
-    return [].concat(_toConsumableArray(tree), [newTree]);
+var insert = function insert(tree) {
+  return function (input) {
+    return (0, _ramda.compose)(makeBranches, makeRoots);
   };
 };
 
-var insert = function insert(tree) {
-  return function (input) {
-    return (0, _ramda.compose)(makeTree, makeBranches, makeRoots);
-  };
-};
+input = ["apple", "banana", "ace", "app", "ball", "bet"];
