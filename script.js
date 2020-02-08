@@ -17,43 +17,22 @@ const makeNode = (data) => {
   node.data(data)
 }
 
+//Compare and merge created word components wuth the tree   
 const traverseBF = (root) = (wordComponents) => {
   let queue = [root]
   let word  = [wordComponents]
-  const sameLevelNodes = root => {
-    let arr = [[root]]
-    if (root.children) {
-      for(var i = 0 ; i < root.children.length; i++) {
-        var child = root.children[i];
-        [...arr, [].push(child)]
-      }
-      for(var i = 0 ; i < root.children.length; i++) {
-        var child = root.children[i];
-        sameLevelNodes(child);
-      }   
-    }
-  }
   while (queue.length) {
     let node = queue.shift()
     let letter = word.shift()
-    let newPrefix = true
     
     if (!letter.children) {
       return root
     }
+    // FIX: This is to compare if it is a new prefix when all nodes at the tree level having different letter.
     if (node.data !== letter.data) {
       [...node.children.push(letter)]
       return node
     }
-    if (newPrefix === true) {
-      
-    }
-    if (node.data === letter.data && node.children) {
-      queue.push(...node.children)
-    } else if (node.data === letter && position === level && node.children) {
-      
-    } 
-    
   }
 }
 
